@@ -147,10 +147,13 @@ public class MainActivity extends Activity {
      */
     private void launchCamera() {
 
+        final int LOW_QUALITY = 0;
+        final int HIGH_QUALITY = 1;
+
         Intent i = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
         i.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        i.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+        i.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, LOW_QUALITY);
         startActivityForResult(i, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
     }
 
@@ -200,32 +203,32 @@ public class MainActivity extends Activity {
         if (Environment.MEDIA_MOUNTED.equalsIgnoreCase(Environment
                 .getExternalStorageState())) {
             Log.d(TAG, "Inside the if statement");
-            File picturesDir = new File(
+            File mediaDir = new File(
                     Environment
                             .getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
                     "MyCameraApp");
 
-            Log.d(TAG, "Picture dir: " + picturesDir);
+            Log.d(TAG, "Media dir: " + mediaDir);
 
             // Create the storage directory if it does not exist
-            if (!picturesDir.exists()) {
-                Log.d(TAG, "Picture dir does not exist trying to create it");
-                if (!picturesDir.mkdirs()) {
+            if (!mediaDir.exists()) {
+                Log.d(TAG, "Media dir does not exist trying to create it");
+                if (!mediaDir.mkdirs()) {
                     Log.d(TAG, "failed to create directory");
                     return null;
                 }
             }
 
             // Create a media file name
-            String timeStamp = new SimpleDateFormat("yyyyMMdd-HH:mm:ss",
+            String timeStamp = new SimpleDateFormat("yyyyMMdd-HHmmss",
                     Locale.getDefault()).format(new Date());
             File mediaFile = null;
 
             if (type == MEDIA_TYPE_IMAGE) {
-                mediaFile = new File(picturesDir.getPath() + File.separator
+                mediaFile = new File(mediaDir.getPath() + File.separator
                         + "IMG_" + timeStamp + ".jpg");
             } else if (type == MEDIA_TYPE_VIDEO) {
-                mediaFile = new File(picturesDir.getPath() + File.separator
+                mediaFile = new File(mediaDir.getPath() + File.separator
                         + "VID_" + timeStamp + ".mp4");
             }
             Log.d(TAG, "Filename: " + mediaFile);
